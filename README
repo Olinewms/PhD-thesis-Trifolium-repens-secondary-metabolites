@@ -1,1 +1,1 @@
-This repository contains all scripts used throughout the duration of the study. Subdirectories are organised according to experiment type.
+This repository contains all scripts used throughout the duration of the study. Subdirectories are organised according to experiment type. SLURM batching was used when running the majority of these scripts, hence there are SBATCH directives at the beginning of most of the reposited scripts. These can be edited or ignored to suit users use-cases.
