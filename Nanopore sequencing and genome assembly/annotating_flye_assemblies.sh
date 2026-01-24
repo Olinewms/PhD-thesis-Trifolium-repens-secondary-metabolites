@@ -10,7 +10,6 @@
 #SBATCH --cpus-per-task=64
 #SBATCH --output=slurm_%j.log
 #SBATCH --error=slurm_%j.err
-#SBATCH --mail-type=END,FAIL
 #SBATCH --time=78:00:00
 
 ## Purge pre-existing modules
