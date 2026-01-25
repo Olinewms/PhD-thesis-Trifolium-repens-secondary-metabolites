@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=STAR_separate_subgenomes
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -10,7 +11,7 @@
 #SBATCH --error=slurm_%j.err
 #SBATCH --time=40:00:00
 
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
 #!/bin/bash
