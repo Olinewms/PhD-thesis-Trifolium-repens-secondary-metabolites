@@ -10,10 +10,10 @@
 #SBATCH --error=slurm_%j.err
 #SBATCH --time=72:00:00
 
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
-## Load the CUDA module (ensure you load a specific version)
+# Load the CUDA module (ensure you load a specific version)
 module load cuda/11.8
 
 # Check CUDA devices assigned by SLURM
