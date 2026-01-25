@@ -24,7 +24,10 @@ cd /projects/health_sciences/bms/biochemistry/macknight_lab/Oliver/NoneVsMidVsHi
 
 conda activate subread
 
+# This command uses count fractioning:
 featureCounts -a /home/newol210/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf -o ./featureCounts_output/FeatureCounts_fastpProcessed_17_samples_UTMhap1_counts_fraction_newGTF.txt -T 64 ./*.bam -p -M --fraction
+
+# This command does not use count fractioning:
 featureCounts -a /home/newol210/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf -o ./featureCounts_output/FeatureCounts_fastpProcessed_17_samples_UTMhap1_counts_noFraction_newGTF.txt -T 64 ./*.bam -p -M
 
 conda deactivate
