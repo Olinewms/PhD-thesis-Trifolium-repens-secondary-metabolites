@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=bcftools_variant_calling_separate_subgenomes
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -15,17 +16,17 @@ source ~/.bashrc
 
 # First you need to index all your BAM files
 
-#cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1_separate_subgenomes/output_STAR_2025_RNA_TrTo_mapping/TrTo_bams
-#for bam in *_Aligned.sortedByCoord.out.bam; do
-#    echo "Indexing $bam..."
-#    samtools index "$bam"
-#done
+cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1_separate_subgenomes/output_STAR_2025_RNA_TrTo_mapping/TrTo_bams
+for bam in *_Aligned.sortedByCoord.out.bam; do
+    echo "Indexing $bam..."
+    samtools index "$bam"
+done
 
-#cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1_separate_subgenomes/output_STAR_2025_RNA_TrTp_mapping/TrTp_bams
-#for bam in *_Aligned.sortedByCoord.out.bam; do
-#    echo "Indexing $bam..."
-#    samtools index "$bam"
-#done
+cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1_separate_subgenomes/output_STAR_2025_RNA_TrTp_mapping/TrTp_bams
+for bam in *_Aligned.sortedByCoord.out.bam; do
+    echo "Indexing $bam..."
+    samtools index "$bam"
+done
 
 mamba activate /home/newol210/macknight_oliver/mamba_envs/bcftools/
 
@@ -46,14 +47,14 @@ bgzip -c variants_renamedSamples_sorted.vcf > variants_renamedSamples_sorted.vcf
 bcftools index variants_renamedSamples_sorted.vcf.gz
 
 # Low-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
 
 # High-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
 
 # This can be used to check that filtered vcf's actually contain variants:
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' low_specific_variants.vcf | head -n 30
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' high_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' low_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' high_specific_variants.vcf | head -n 30
 
 echo "Finished TrTo variants"
 
@@ -74,14 +75,14 @@ bgzip -c variants_renamedSamples_sorted.vcf > variants_renamedSamples_sorted.vcf
 bcftools index variants_renamedSamples_sorted.vcf.gz
 
 # Low-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
 
 # High-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
 
 # This can be used to check that filtered vcf's actually contain variants:
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' low_specific_variants.vcf | head -n 30
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' high_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' low_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' high_specific_variants.vcf | head -n 30
 
 echo "Finished TrTp variants"
 
