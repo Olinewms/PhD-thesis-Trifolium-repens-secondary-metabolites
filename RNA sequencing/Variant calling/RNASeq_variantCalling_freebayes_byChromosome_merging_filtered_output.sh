@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=vcf_to_csv
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
