@@ -1,4 +1,4 @@
-# Use this code when you have a GTF file that has gene product descriptions associtated with a LOC ID
+# Use this code when you have a GTF file that has gene product descriptions associtated with a LOC ID, and you want to append those gene products onto their respective DEGs.
 
 awk '
 # Step 1: Read GTF and build mapping
