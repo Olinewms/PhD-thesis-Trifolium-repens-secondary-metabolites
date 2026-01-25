@@ -39,4 +39,4 @@ while IFS= read -r transcript; do
     ' braker.aa >> filtered_proteins.fasta
 done < filtered_annotated_variants_transcript_ids.txt
 
-# Then you can do a blastp nr search using filtered_proteins.fasta !!
+# Then you can do a blastp nr search using filtered_proteins.fasta
