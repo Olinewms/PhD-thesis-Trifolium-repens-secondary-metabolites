@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=process_vcfs
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
