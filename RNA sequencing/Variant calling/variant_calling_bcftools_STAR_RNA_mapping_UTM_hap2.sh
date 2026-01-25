@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=bcftools_variant_calling_UTM_hap2
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -16,10 +17,11 @@ source ~/.bashrc
 # First you need to index all your BAM files
 
 cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap2
-#for bam in *_Aligned.sortedByCoord.out.bam; do
-#    echo "Indexing $bam..."
-#    samtools index "$bam"
-#done
+
+for bam in *_Aligned.sortedByCoord.out.bam; do
+    echo "Indexing $bam..."
+    samtools index "$bam"
+done
 
 mamba activate /home/newol210/macknight_oliver/mamba_envs/bcftools/
 
@@ -49,8 +51,8 @@ bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' high_specific_variants.vcf | head -n
 
 echo "Finished variants"
 
-# This if how you prep the reference genome for KaryoploteR
-#samtools faidx reference.fna
-#cut -f1,2 reference.fna.fai > genome.txt
+# This is how you prep the reference genome for KaryoploteR
+samtools faidx reference.fna
+cut -f1,2 reference.fna.fai > genome.txt
 
 mamba deactivate
