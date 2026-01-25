@@ -1,0 +1,117 @@
+---
+title: "EdgeR_none_vs_high_2023_data_Tpratense"
+output: html_document
+date: "2025-10-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+library(edgeR)
+library(ggplot2)
+library(Biostrings)  # For working with FASTA files
+```
+
+## Load Count Matrix
+
+```{r load-data}
+## Load Count Matrix
+
+# Load the count matrix
+data <- read.table("/mnt/auto-hcs/biochemistry/Lab_Groups/brownfieldlab/from_archive/olivernewman_2023_2024/home_biochemcompute_2023/FeatureCounts_output_Tpratense_mapping/FeatureCounts_10_samples_T_pratense_counts_cleaned_header.txt", 
+                   header = TRUE, row.names = 1, sep = "\t", check.names = FALSE, comment.char = "#")
+
+# Remove specific columns (e.g., columns 2, 3, 4, and 5)
+data <- data[, -c(1:5)]
+
+# Ensure counts are numeric
+counts <- as.matrix(data)
+
+# Clean column names to extract sample IDs
+colnames(counts) <- gsub("\\./|_Aligned\\.sortedByCoord\\.out\\.bam", "", colnames(counts))
+
+# Define sample name patterns for each group
+none_samples <- c(
+  "Sample_1",
+  "Sample_2",
+  "Sample_3",
+  "Sample_4",
+  "Sample_5"
+)
+
+high_samples <- c(
+  "Sample_6",
+  "Sample_7",
+  "Sample_8",
+  "Sample_9",
+  "Sample_10"
+)
+
+group_labels <- ifelse(
+  colnames(counts) %in% none_samples, "None",
+  ifelse(colnames(counts) %in% high_samples, "High", NA)
+)
+
+# Subset counts and groups to include only "None" and "High"
+valid_groups <- group_labels %in% c("None", "High")
+counts <- counts[, valid_groups, drop = FALSE]
+groups <- factor(group_labels[valid_groups])
+```
+
+## Create DGEList Object
+
+```{r dge-object}
+# Create DGEList object
+dge <- DGEList(counts = counts, group = groups)
+
+# Filter out lowly expressed genes
+keep <- filterByExpr(dge)
+dge <- dge[keep, , keep.lib.sizes = FALSE]
+
+# Normalize library sizes
+dge <- calcNormFactors(dge)
+```
+
+## Estimate Dispersion
+
+```{r estimate-dispersion}
+# Estimate dispersion
+dge <- estimateDisp(dge)
+```
+
+## Perform Differential Expression Analysis
+
+```{r differential-expression}
+# Perform exact test
+dge_results <- exactTest(dge, pair = c("None", "High"))
+
+dge_table <- topTags(dge_results, n = Inf)$table
+significant_genes <- dge_table[dge_table$FDR < 0.001 & abs(dge_table$logFC) > 1, ]
+```
+
+## Plot Results
+
+```{r plot-volcano}
+# Volcano plot
+volcano_data <- data.frame(
+  logFC = dge_table$logFC,
+  negLogFDR = -log10(dge_table$FDR),
+  Significant = dge_table$FDR < 0.05
+)
+
+ggplot(volcano_data, aes(x = logFC, y = negLogFDR, color = Significant)) +
+  geom_point() +
+  scale_color_manual(values = c("grey", "red")) +
+  labs(title = "Volcano Plot", x = "Log2 Fold Change", y = "-Log10(FDR)") +
+  theme_minimal()
+```
+
+## Save Results
+
+```{r save-results}
+# Save significant genes to file
+write.table(significant_genes, "/mnt/auto-hcs/biochemistry/Lab_Groups/brownfieldlab/from_archive/olivernewman_2023_2024/home_biochemcompute_2023/FeatureCounts_output_Tpratense_mapping/significant_genes_FeatureCounts_10_samples_T_pratense_counts.txt", 
+            sep = "\t", quote = FALSE, row.names = TRUE)
+```
