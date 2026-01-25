@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=trinity_GeneCount_matrix_2023_data
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -10,7 +11,7 @@
 
 set -ueo pipefail
 
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
 #!/bin/bash
