@@ -1,0 +1,36 @@
+conda activate /home/newol210/macknight_oliver/conda_envs/transdecoder 
+conda install bioconda::transdecoder
+
+### Step 1
+gtf_genome_to_cdna_fasta.pl ~/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf ~/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/ncbi_dataset/data/GCA_030914245.1/GCA_030914245.1_UTM_Trep_v1.0_hap1_genomic.fna > transdecoder_transcripts_usingGTF.fasta
+
+### Step 2
+gtf_to_alignment_gff3.pl ~/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf > stringtie_UTM_Trep_v1_hap1_merged.gff3
+
+### Step 3
+TransDecoder.LongOrfs -t transdecoder_transcripts_usingGTF.fasta
+
+### Step 4
+cdna_alignment_orf_to_genome_orf.pl transdecoder_transcripts_usingGTF.fasta.transdecoder_dir/longest_orfs.gff3 stringtie_UTM_Trep_v1_hap1_merged.gff3 transdecoder_transcripts_usingGTF.fasta > transcripts.fasta.transdecoder.genome.gff3
+# This command gave me the following warnings and readout:
+Warning [1], shouldn't have a minus-strand ORF on a spliced transcript structure. Skipping entry MSTRG.10000.1.p2.
+...
+Warning [16993], shouldn't have a minus-strand ORF on a spliced transcript structure. Skipping entry MSTRG.9999.1.p2.
+Done.  73720 / 90713 transcript orfs could be propagated to the genome
+# This means that most ORFs mapped successfully (73,720/90,713 = ~81%)
+# Run the following to extract StringTie ID's of all the skipped transcripts:
+grep "Skipping entry" cdna_alignment_orf_to_genome_orf.log | awk '{print $NF}' | sed 's/\.p[0-9]\+\.$//' > cdna_alignment_orf_to_genome_orf_skipped_transcripts.txt
+sed 's/\.[0-9]\+$//' cdna_alignment_orf_to_genome_orf_skipped_transcripts.txt | sort -u > cdna_alignment_orf_to_genome_orf_skipped_genes.txt
+
+sed -i 's/[[:space:]]*$//' important_genes_txt # this file contains all the annotated genes in the CM061887 region of interest (variant-rich region)
+sed -i 's/[[:space:]]*$//' cdna_alignment_orf_to_genome_orf_skipped_genes.txt
+sed -i 's/\r$//' important_genes_txt
+sed -i 's/\r$//' cdna_alignment_orf_to_genome_orf_skipped_genes.txt
+
+grep -F -f important_genes_txt cdna_alignment_orf_to_genome_orf_skipped_genes.txt > missing_genes_in_orf_gff3.txt # this then gives a .txt listing all the potentially important genes that were skipped during the transdecoder predictions
+
+
+### Then I tried using the transcripts.fasta.transdecoder.genome.gff3 in a bcftools csq commmand
+# which didn't work due to bcftools requiring immaculate gff3 formatting :( 
+
+

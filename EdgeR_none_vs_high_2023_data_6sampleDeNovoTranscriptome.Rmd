@@ -1,0 +1,143 @@
+---
+title: "EdgeR_none_vs_high_2023_data_6sampleDeNovoTranscriptome"
+output: html_document
+date: "2025-10-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries}
+library(edgeR)
+library(ggplot2)
+library(Biostrings)  # For working with FASTA files
+```
+
+## Load Count Matrix
+
+```{r load-data}
+## Load Count Matrix
+
+# Load the count matrix
+data <- read.table("/home/newol210/macknight_oliver/2023_de_novo_6_sample_transcriptome/RSEM.isoform.counts.matrix", 
+                   header = TRUE, row.names = 1, sep = "\t", check.names = FALSE, comment.char = "#")
+
+# Ensure counts are numeric
+counts <- as.matrix(data)
+
+# Define sample name patterns for each group
+none_samples <- c(
+  "RSEM_sample_1_using_6SampleTranscriptome",
+  "RSEM_sample_2_using_6SampleTranscriptome",
+  "RSEM_sample_3_using_6SampleTranscriptome",
+  "RSEM_sample_4_using_6SampleTranscriptome",
+  "RSEM_sample_5_using_6SampleTranscriptome"
+)
+
+high_samples <- c(
+  "RSEM_sample_6_using_6SampleTranscriptome",
+  "RSEM_sample_7_using_6SampleTranscriptome",
+  "RSEM_sample_8_using_6SampleTranscriptome",
+  "RSEM_sample_9_using_6SampleTranscriptome",
+  "RSEM_sample_10_using_6SampleTranscriptome"
+)
+
+group_labels <- ifelse(
+  colnames(counts) %in% none_samples, "None",
+  ifelse(colnames(counts) %in% high_samples, "High", NA)
+)
+
+# Subset counts and groups to include only "None" and "High"
+valid_groups <- group_labels %in% c("None", "High")
+counts <- counts[, valid_groups, drop = FALSE]
+groups <- factor(group_labels[valid_groups])
+```
+
+## Create DGEList Object
+
+```{r dge-object}
+# Create DGEList object
+dge <- DGEList(counts = counts, group = groups)
+
+# Filter out lowly expressed genes
+keep <- filterByExpr(dge)
+dge <- dge[keep, , keep.lib.sizes = FALSE]
+
+# Normalize library sizes
+dge <- calcNormFactors(dge)
+```
+
+## Estimate Dispersion
+
+```{r estimate-dispersion}
+# Estimate dispersion
+dge <- estimateDisp(dge)
+```
+
+## Perform Differential Expression Analysis
+
+```{r differential-expression}
+# Perform exact test
+dge_results <- exactTest(dge, pair = c("None", "High"))
+
+dge_table <- topTags(dge_results, n = Inf)$table
+significant_genes <- dge_table[dge_table$FDR < 0.001 & abs(dge_table$logFC) > 1, ]
+```
+
+## Plot Results
+
+```{r plot-volcano}
+# Volcano plot
+volcano_data <- data.frame(
+  logFC = dge_table$logFC,
+  negLogFDR = -log10(dge_table$FDR),
+  Significant = dge_table$FDR < 0.05
+)
+
+ggplot(volcano_data, aes(x = logFC, y = negLogFDR, color = Significant)) +
+  geom_point() +
+  scale_color_manual(values = c("grey", "red")) +
+  labs(title = "Volcano Plot", x = "Log2 Fold Change", y = "-Log10(FDR)") +
+  theme_minimal()
+```
+
+## Save Results
+
+```{r save-results}
+# Save significant genes to file
+write.table(significant_genes, "/home/newol210/macknight_oliver/2023_de_novo_6_sample_transcriptome/significant_ISOFORM_RSEM_10_samples_6sampleDeNovo.txt", 
+            sep = "\t", quote = FALSE, row.names = TRUE)
+```
+
+## Extract Significant Gene Sequences
+
+```{r extract-dna-sequences}
+# Load significant gene IDs (from your EdgeR result)
+sig_genes <- read.delim("/home/newol210/macknight_oliver/2023_de_novo_6_sample_transcriptome/significant_ISOFORM_RSEM_10_samples_6sampleDeNovo.txt",
+                        header = TRUE, row.names = 1)
+sig_gene_ids <- rownames(sig_genes)
+
+# Read Trinity fasta
+fasta_file <- "/home/newol210/macknight_oliver/2023_de_novo_6_sample_transcriptome/Trinity.fasta"
+fasta <- readDNAStringSet(fasta_file)
+
+# Extract clean IDs from FASTA headers (remove anything after first space)
+fasta_ids <- sub(" .*", "", names(fasta))  # keep only up to first space
+
+# Extract gene part (remove isoform suffix, e.g. "_i1")
+#fasta_gene_ids <- sub("_i[0-9]+$", "", fasta_ids)
+
+# Keep sequences whose gene part matches DE gene IDs
+keep <- fasta_ids %in% sig_gene_ids
+filtered_fasta <- fasta[keep]
+
+# Optional: check how many matched
+cat(sum(keep), "transcripts matched out of", length(fasta), "total\n")
+
+# Save the filtered fasta
+output_fasta <- "/home/newol210/macknight_oliver/2023_de_novo_6_sample_transcriptome/filtered_DE_ISOFORMs_low_vs_high.fasta"
+writeXStringSet(filtered_fasta, filepath = output_fasta)
+```
+
+

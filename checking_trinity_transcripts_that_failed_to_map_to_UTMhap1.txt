@@ -1,0 +1,43 @@
+# This is cut and paste from a 'history' command readout, so the top is the most recent command used when I was doing this check
+
+wc -l filtered2_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt_.tsv
+head filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv
+head /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/gene_and_isoformCountsMatrices_rsem/filtered_LowVsHigh_deNovo_EdgeR_test2_rsem_isoformCounts_blastnOut.tsv
+cut -f1 /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/gene_and_isoformCountsMatrices_rsem/filtered_LowVsHigh_deNovo_EdgeR_test2_rsem_isoformCounts_blastnOut.tsv | grep -F -f - filtered_primary_unmapped_transc
+ripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv > DEGs_unable_to_map_to_UTMhap1_ref.tsv
+head DEGs_unable_to_map_to_UTMhap1_ref.tsv
+wc -l DEGs_unable_to_map_to_UTMhap1_ref.tsv
+awk 'NR==FNR {ids[$1]; next} $1 in ids' filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/gene_and_
+isoformCountsMatrices_rsem/filtered_LowVsHigh_deNovo_EdgeR_test2_rsem_isoformCounts_blastnOut.tsv > DEGs_unable_to_map_to_UTMhap1_ref.tsv
+tail filtered_LowVsHigh_deNovo_EdgeR_test2_rsem_isoformCounts_blastnOut.tsv
+wc -l filtered_LowVsHigh_deNovo_EdgeR_test2_rsem_isoformCounts_blastnOut.tsv
+cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/gene_and_isoformCountsMatrices_rsem/
+ls -l /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/gene_and_isoformCountsMatrices_rsem/
+ls -l /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/
+awk -F'\t' 'tolower($13) !~ /n\/a|virus|homo|rattus|human|synthetic|antigen|bacterium|strain|phage|frankliniella|conidiobolus/' filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv > filtered2_primary_unmapped_tr
+anscripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt_.tsv
+awk -F'\t' 'tolower($13) !~ /n\/a|virus|homo|rattus|human|synthetic|antigen|bacterium|strain|phage|Frankliniella|Conidiobolus/' filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv > filtered2_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt_.tsv
+wc -l filtered2
+head filtered2_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt_.tsv
+awk -F'\t' 'tolower($13) !~ /n\/a|virus|homo|rattus|human|synthetic|antigen|bacterium|strain/' filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv > filtered2_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt_.tsv
+grep ">" /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/samples_for_trinity_assembly/trinity_de_novo_8_samples/Trinity.fasta | wc -l
+grep ">" primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta | wc -l
+samtools flagstat Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam
+wc -l filtered_primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta_blastnOut_core_nt.tsv
+cd minimap2_output_UTMhap1/
+cd macknight_oliver/braker_working_dir/
+rm slurm_1310271.*
+cd ../braker_working_dir/minimap2_output_UTMhap1/
+seff 1310271
+sbatch ~/macknight_oliver/scripts/RNASeq_blastn_DEGs.sh
+blastn --help
+scancel 1310269
+seff 1310269
+seff 169096
+grep ">" unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta | wc -l
+head primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta
+samtools fasta unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam > unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta
+samtools fasta primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam > primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.fasta
+samtools view -b -f 4 -F 256 Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam > primary_unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam
+samtools view -b -f 4 Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam > unmapped_transcripts_Trinity_deNovo_minimap2_against_UTMhap1.sorted.bam
+cat ../../scripts/minimap2_TrinityFasta_to_UTMhap1_w_trimmed_headers.sh

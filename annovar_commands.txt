@@ -1,0 +1,4 @@
+# Step 1
+../annovar/gtfToGenePred -genePredExt ~/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap1/annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf stringtie_UTM_Trep_v1_hap1_merged_refGene.txt # gtfToGenePred is from https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
+
+# Step 2
