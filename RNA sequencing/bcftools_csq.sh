@@ -1,31 +1,15 @@
 #!/usr/bin/env bash
-#
-# Job name
+
 #SBATCH --job-name=bcftools_csq
-#
-# Account name
 #SBATCH --account=newol210
-#
-# Partition
 #SBATCH --partition=aoraki
-#
-# Number of tasks per partition
 #SBATCH --ntasks-per-node=1
-#
-# Number of CPUs (e.g 16 cores)
 #SBATCH --cpus-per-task=128
-#
-# Memory per CPU
 #SBATCH --mem=100GB
-#
-# File to save stdout output
 #SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
 #SBATCH --error=slurm_%j.err
-#
-# Time required to run job (hh:mm:ss)
 #SBATCH --time=48:00:00
+
 #!/bin/bash
 
 # Stop script if there is an error
