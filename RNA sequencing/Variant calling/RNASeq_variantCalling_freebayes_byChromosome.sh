@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=freebayes
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
