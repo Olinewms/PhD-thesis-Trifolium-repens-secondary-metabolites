@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=STAR
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -21,8 +22,8 @@ source ~/.bashrc
 mamba activate /home/newol210/macknight_oliver/mamba_envs/star
 
 ### Index the reference genome
-#cd /projects/health_sciences/bms/biochemistry/macknight_lab/Oliver/reference_genomes/UTM_Trep_v1.0_hap1
-#STAR --runMode genomeGenerate --genomeDir star_genome_indexing/ --genomeFastaFiles ./star_genome_annotation/GCA_030914245.1_UTM_Trep_v1.0_hap1_genomic.fna --sjdbGTFfile annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf --genomeSAindexNbases 13 --runThreadN 64
+cd /projects/health_sciences/bms/biochemistry/macknight_lab/Oliver/reference_genomes/UTM_Trep_v1.0_hap1
+STAR --runMode genomeGenerate --genomeDir star_genome_indexing/ --genomeFastaFiles ./star_genome_annotation/GCA_030914245.1_UTM_Trep_v1.0_hap1_genomic.fna --sjdbGTFfile annotation/stringtie_UTM_Trep_v1_hap1_merged.gtf --genomeSAindexNbases 13 --runThreadN 64
 
 ### Map to the reference genome
 cd /home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/Processed_Fastq_by_fastp_2023_data
