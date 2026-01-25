@@ -1,21 +1,13 @@
 #!/usr/bin/env bash
-#
+
 #SBATCH --job-name=blastp_search
-#
 #SBATCH --account=newol210
-#
 #SBATCH --partition=aoraki
-#
 #SBATCH --ntasks-per-node=1
-#
 #SBATCH --cpus-per-task=64
-#
 #SBATCH --mem=5GB
-#
 #SBATCH --output=slurm_%j.log
-#
 #SBATCH --error=slurm_%j.err
-#
 #SBATCH --time=7:00:00
 
 #!/bin/bash
