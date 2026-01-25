@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=STAR_UTM_hap2
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -10,7 +11,7 @@
 #SBATCH --error=slurm_%j.err
 #SBATCH --time=48:00:00
 
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
 #!/bin/bash
@@ -23,11 +24,11 @@ mamba activate /home/newol210/macknight_oliver/mamba_envs/star
 ### Index the reference genome
 GENOME_DIR="/home/newol210/macknight_oliver/reference_genomes/UTM_Trep_v1.0_hap2/ncbi_dataset/data/GCA_030914255.1"
 
-#STAR --runThreadN 64 \
-#     --runMode genomeGenerate \
-#     --genomeDir ${GENOME_DIR} \
-#     --genomeFastaFiles ${GENOME_DIR}/UTM_Trep_v1.0_hap2_cleaned_headers.fna \
-#     --genomeSAindexNbases 13
+STAR --runThreadN 64 \
+     --runMode genomeGenerate \
+     --genomeDir ${GENOME_DIR} \
+     --genomeFastaFiles ${GENOME_DIR}/UTM_Trep_v1.0_hap2_cleaned_headers.fna \
+     --genomeSAindexNbases 13
     
 ### Map to the indexed reference genome
 cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs
