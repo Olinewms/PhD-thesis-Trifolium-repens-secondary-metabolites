@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=STAR_separate_subgenomes
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -10,7 +11,7 @@
 #SBATCH --error=slurm_%j.err
 #SBATCH --time=24:00:00
 
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
 #!/bin/bash
@@ -21,7 +22,7 @@ source ~/.bashrc
 mamba activate /home/newol210/macknight_oliver/mamba_envs/star
 
 # Clean the headers of the referenc genome being used (in this case it is the UTM_hap2 reference)
-#awk '{if($0 ~ /^>/) {print $1} else {print $0}}' GCA_030914255.1_UTM_Trep_v1.0_hap2_genomic.fna > UTM_Trep_v1.0_hap2_cleaned_headers.fna
+awk '{if($0 ~ /^>/) {print $1} else {print $0}}' GCA_030914255.1_UTM_Trep_v1.0_hap2_genomic.fna > UTM_Trep_v1.0_hap2_cleaned_headers.fna
 
 # Index the reference genomes
 GENOME_DIR="/home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1_separate_subgenomes"
