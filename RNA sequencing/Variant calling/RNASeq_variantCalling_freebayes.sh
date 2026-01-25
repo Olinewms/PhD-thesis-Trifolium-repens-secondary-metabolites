@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=freebayes
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
@@ -43,23 +44,23 @@ mamba activate /home/newol210/macknight_oliver/mamba_envs/freebayes
 #samtools index L6.rg.bam
 
 # Running Freebayes
-#freebayes -f /home/newol210/macknight_oliver/braker_working_dir/UTM_Trep_v1.0_hap1_genomic.fa \
-#--ploidy 4 \
-#-L bam_list_fastpReads_UTMhap1.list \
-#--region CM061880.1 \
-#--min-alternate-count 2 \
-#--min-alternate-fraction 0.2 \
-#--use-best-n-alleles 5 \
-#-v freebayes_tetraploid_low_vs_high_CM061880.vcf
+freebayes -f /home/newol210/macknight_oliver/braker_working_dir/UTM_Trep_v1.0_hap1_genomic.fa \
+--ploidy 4 \
+-L bam_list_fastpReads_UTMhap1.list \
+--region CM061880.1 \
+--min-alternate-count 2 \
+--min-alternate-fraction 0.2 \
+--use-best-n-alleles 5 \
+-v freebayes_tetraploid_low_vs_high_CM061880.vcf
 
-#mamba deactivate
+mamba deactivate
 
 ### After doing the variant calling, proceed to filtering etc:
 mamba activate /home/newol210/macknight_oliver/mamba_envs/bcftools
 cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1/all_bams/sorted_and_indexed_bams/variants_LowVsHigh_genomeWide_freebayes_tetraploid/freebayes_tetraploid_low_vs_high_CM061880/
 
 # Rename the headers for ease-of-use downstream
-#bcftools reheader -s sample_map.txt -o variants_renamedSamples.vcf freebayes_tetraploid_low_vs_high_CM061887.vcf
+bcftools reheader -s sample_map.txt -o variants_renamedSamples.vcf freebayes_tetraploid_low_vs_high_CM061887.vcf
 
 # Sort and index vcf file
 bgzip -c freebayes_tetraploid_low_vs_high_CM061880.vcf > variants_renamedSamples.vcf.gz
@@ -68,21 +69,21 @@ bgzip -c variants_renamedSamples_sorted.vcf > variants_renamedSamples_sorted.vcf
 bcftools index variants_renamedSamples_sorted.vcf.gz
 
 # Low-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
-#bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]~"^0/0/0/0$")=COUNT(GT[@samplesLow.txt])' variants_renamedSamples_sorted.vcf.gz -o low_specific.vcf
-#bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0/0/0")=0' variants_renamedSamples_sorted.vcf.gz -o bcftools_view_low_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o low_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]~"^0/0/0/0$")=COUNT(GT[@samplesLow.txt])' variants_renamedSamples_sorted.vcf.gz -o low_specific.vcf
+bcftools view -i'COUNT(GT[@samplesHigh.txt]!~"1")=0 & COUNT(GT[@samplesLow.txt]!="0/0/0/0")=0' variants_renamedSamples_sorted.vcf.gz -o bcftools_view_low_specific_variants.vcf
 
 # High-pigment-specific variants
-#bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
-#bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]~"^0/0/0/0$")=COUNT(GT[@samplesHigh.txt])' variants_renamedSamples_sorted.vcf.gz -o high_specific.vcf
-#bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0/0/0")=0' variants_renamedSamples_sorted.vcf.gz -o bcftools_view_high_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0")=0' variants_renamedSamples_sorted.vcf.gz -o high_specific_variants.vcf
+bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]~"^0/0/0/0$")=COUNT(GT[@samplesHigh.txt])' variants_renamedSamples_sorted.vcf.gz -o high_specific.vcf
+bcftools view -i'COUNT(GT[@samplesLow.txt]!~"1")=0 & COUNT(GT[@samplesHigh.txt]!="0/0/0/0")=0' variants_renamedSamples_sorted.vcf.gz -o bcftools_view_high_specific_variants.vcf
 
 # This can be used to check that filtered vcf's actually contain variants:
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_low_specific_variants.vcf | head -n 30
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_high_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_low_specific_variants.vcf | head -n 30
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_high_specific_variants.vcf | head -n 30
 
 # Then you can use the following to get all the 
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_low_specific_variants.vcf | awk -F"\t" '{print $1 "\t" $2}' > chromosome_and_positions_coseg_vars_NoneVsHigh.txt
-#bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_high_specific_variants.vcf | awk -F"\t" '{print $1 "\t" $2}' >> chromosome_and_positions_coseg_vars_NoneVsHigh.txt
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_low_specific_variants.vcf | awk -F"\t" '{print $1 "\t" $2}' > chromosome_and_positions_coseg_vars_NoneVsHigh.txt
+bcftools query -f '%CHROM\t%POS\t[%GT\t]\n' bcftools_view_high_specific_variants.vcf | awk -F"\t" '{print $1 "\t" $2}' >> chromosome_and_positions_coseg_vars_NoneVsHigh.txt
 
-#mamba deactivate
+mamba deactivate
