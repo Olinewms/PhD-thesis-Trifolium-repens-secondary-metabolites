@@ -1,38 +1,17 @@
 #!/usr/bin/env bash
-#
-# Job name
-#SBATCH --job-name=hisat2_trinity
-#
-# Account name
-#SBATCH --account=newol210
-#
-# Partition
-#SBATCH --partition=aoraki
-#
-# Number of tasks per partition
-#SBATCH --ntasks-per-node=2
-#
-# Number of CPUs (e.g 16 cores)
-#SBATCH --cpus-per-task=36
-#
-# File to save stdout output
-#SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
-#SBATCH --error=slurm_%j.err
-#
-# Email
-#SBATCH --mail-user=newol210@student.otago.ac.nz
-#SBATCH --mail-type=END,FAIL
-#
-# Time required to run job (hh:mm:ss)
-#SBATCH --time=3:00:00
 
-# Commands go below
+#SBATCH --job-name=hisat2_trinity
+#SBATCH --account=newol210
+#SBATCH --partition=aoraki
+#SBATCH --ntasks-per-node=2
+#SBATCH --cpus-per-task=36
+#SBATCH --output=slurm_%j.log
+#SBATCH --error=slurm_%j.err
+#SBATCH --time=3:00:00
 
 #!/bin/bash
 
-# This script is mapping my de novo transcriptome assembly to the UTMhap1 reference genome with the cleaned headers
+# This script is mapping the de novo transcriptome assembly to the UTMhap1 reference genome with the cleaned headers
 
 # Stop script if there is an error
 set -ueo pipefail
