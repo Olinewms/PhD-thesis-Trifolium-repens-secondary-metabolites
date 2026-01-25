@@ -1,30 +1,13 @@
 #!/usr/bin/env bash
-#
-# Job name
-#SBATCH --job-name=FastQC
-#
-# Account name
-#SBATCH --account=newol210
-#
-# Partition
-#SBATCH --partition=aoraki
-#
-# Ensure the allocation only goes on a single node
-#SBATCH --nodes=1
-#
-# Number of tasks per partition
-#SBATCH --ntasks-per-node=1
-#
-# File to save stdout output
-#SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
-#SBATCH --error=slurm_%j.err
-#
-# Time required to run job (hh:mm:ss)
-#SBATCH --time=10:00:00
 
-# Commands go below
+#SBATCH --job-name=FastQC
+#SBATCH --account=newol210
+#SBATCH --partition=aoraki
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --output=slurm_%j.log
+#SBATCH --error=slurm_%j.err
+#SBATCH --time=10:00:00
 
 ## Purge pre-existing modules
 module purge
@@ -36,8 +19,7 @@ set -ueo pipefail
 
 cd /home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/Processed_Fastq_by_fastp_2023_data
 
-
-### First QC all fastq's
+## First QC all fastq's
 source ~/.bashrc
 mamba activate /home/newol210/macknight_oliver/mamba_envs/fastqc/
 
