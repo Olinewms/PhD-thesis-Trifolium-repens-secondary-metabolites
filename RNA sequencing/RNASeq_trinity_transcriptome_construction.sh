@@ -1,37 +1,14 @@
 #!/usr/bin/env bash
-#
-# Job name
+
 #SBATCH --job-name=trinity_transcriptome_construction
-#
-# Account name
 #SBATCH --account=newol210
-#
-# Partition
 #SBATCH --partition=aoraki
-#
-# Ensure the allocation only goes on a single node
 #SBATCH --nodes=1
-#
-# Number of tasks per partition
 #SBATCH --ntasks-per-node=1
-#
-# Memory per GPU
 #SBATCH --mem=500G
-#
-# Number of CPUs (e.g 16 cores)
 #SBATCH --cpus-per-task=128
-#
-# File to save stdout output
 #SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
 #SBATCH --error=slurm_%j.err
-#
-# Email
-#SBATCH --mail-user=newol210@student.otago.ac.nz
-#SBATCH --mail-type=END,FAIL
-#
-# Time required to run job (hh:mm:ss)
 #SBATCH --time=160:00:00
 
 #!/bin/bash
@@ -48,10 +25,6 @@ FASTQ_DIR="/home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fast
 
 # Output directory for Trinity
 OUTPUT_DIR="/home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/all_R1_and_R2_fastqs/samples_for_trinity_assembly/trinity_de_novo_8_samples"
-
-# Memory and CPU settings for Trinity (This was a suggestion from Murray, but I couldn't get it to work properly)
-#MAX_MEMORY=$SBATCH_MEM_PER_NODE
-#CPU=$SLURM_CPUS_PER_TASK
 
 # Collect all R1 and R2 fastq files
 LEFT_FILES=$(ls ${FASTQ_DIR}/*_R1_*.fastq.gz | tr '\n' ',')
