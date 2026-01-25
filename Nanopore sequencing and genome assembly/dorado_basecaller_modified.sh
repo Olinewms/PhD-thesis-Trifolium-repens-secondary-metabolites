@@ -1,7 +1,7 @@
 # This script is for multi-sample basecalling using dorado basecalling models. 
 
 #!/usr/bin/env bash
-#SBATCH --job-name=dorado_basecall_Rf_revised
+#SBATCH --job-name=dorado_basecall
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki_gpu_A100_80GB
 #SBATCH --ntasks-per-node=1
