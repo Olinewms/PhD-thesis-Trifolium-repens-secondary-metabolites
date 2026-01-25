@@ -1,34 +1,13 @@
 #!/usr/bin/env bash
-#
-# Job name
-#SBATCH --job-name=minimap2_trinity
-#
-# Account name
-#SBATCH --account=newol210
-#
-# Partition
-#SBATCH --partition=aoraki
-#
-# Number of tasks per partition
-#SBATCH --ntasks-per-node=1
-#
-# Number of CPUs (e.g 16 cores)
-#SBATCH --cpus-per-task=16
-#
-# File to save stdout output
-#SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
-#SBATCH --error=slurm_%j.err
-#
-# Email
-#SBATCH --mail-user=newol210@student.otago.ac.nz
-#SBATCH --mail-type=END,FAIL
-#
-# Time required to run job (hh:mm:ss)
-#SBATCH --time=1:00:00
 
-# Commands go below
+#SBATCH --job-name=minimap2_trinity
+#SBATCH --account=newol210
+#SBATCH --partition=aoraki
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --output=slurm_%j.log
+#SBATCH --error=slurm_%j.err
+#SBATCH --time=1:00:00
 
 #!/bin/bash
 
@@ -57,9 +36,9 @@ SAM_OUTPUT="$OUTPUT_DIR/${SAMPLE_NAME}_minimap2_output.sam"
 BAM_OUTPUT="$OUTPUT_DIR/${SAMPLE_NAME}_deNovo_minimap2_against_UTMhap1.sorted.bam"
 
 # Run minimap2 in splice mode
-# -ax splice : spliced alignment mode (good for RNA/transcript sequences)
-# -uf       : indicates that the query sequences are full-length cDNA (assembled transcripts)
-# -k14      : sets the k-mer size to 14 (adjustable depending on your data)
+ -ax splice : spliced alignment mode (good for RNA/transcript sequences)
+ -uf       : indicates that the query sequences are full-length cDNA (assembled transcripts)
+ -k14      : sets the k-mer size to 14 (adjustable depending on your data)
 minimap2 -ax splice -uf -k14 "$REF_GENOME" "$INPUT_FASTA" > "$SAM_OUTPUT"
 
 # Convert SAM to BAM, sort, and index with samtools
