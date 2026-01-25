@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #SBATCH --job-name=bcftools_variant_calling
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
