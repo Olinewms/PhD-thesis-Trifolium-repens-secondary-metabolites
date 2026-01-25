@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #SBATCH --job-name=FeatureCounts
 #SBATCH --account=newol210
 #SBATCH --partition=aoraki
