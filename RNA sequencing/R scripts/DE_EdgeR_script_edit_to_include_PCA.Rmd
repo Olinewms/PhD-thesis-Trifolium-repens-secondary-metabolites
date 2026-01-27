@@ -1,0 +1,200 @@
+---
+title: "DE_with_EdgeR"
+author: "Oliver"
+date: '2022-09-16'
+output: html_document
+---
+
+```{r install edgeR}
+BiocManager::install("DESeq2")
+```
+
+# Load library 
+# edgeR version 3.38.0
+```{r}
+library(edgeR)
+library(DESeq2)
+library(ggplot2)
+```
+
+# Get count dataset
+```{r}
+count_matrix <- as.matrix(read.delim("/home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/RSEM_trinity_matrix_files/RSEM.gene.counts.matrix", header = TRUE, row.names = 1))
+```
+
+```{r}
+head(count_matrix, 10)
+```
+
+```{r}
+count_matrix <- round(count_matrix[,], digits = 0)
+head(count_matrix, 5)
+```
+
+```{r}
+sample_info <- c("ctr", "ctr", "ctr", "ctr", "ctr", "trt", "trt", "trt", "trt", "trt")
+```
+
+# Create DGEList data class for count and sample information
+```{r}
+dge <- DGEList(counts = count_matrix, group = factor(sample_info))
+dge
+```
+
+# Filter out geneIDs with low counts
+```{r}
+keep <- filterByExpr(y = dge)
+dge <- dge[keep, , keep.lib.sizes=FALSE]
+```
+
+# calcNormFactors function is used for TMM normalization and calculating normalization (scaling) factors
+```{r}
+dge <- calcNormFactors(object = dge)
+```
+
+# Model fitting and estimating dispersions
+# edgeR internally calculates pseudo count for speeding up the analysis for negative binomial (NB) dispersion estimation and exact test for pairwise comparison
+# estimateDisp() function estimates both common and tagwise dispersions in one run
+```{r}
+dge <- estimateDisp(y = dge)
+```
+
+# The exact test (exact p values) is used for testing the differential expression of genes between two condition counts data
+```{r}
+et <- exactTest(object = dge)
+```
+
+# topTags() function is useful to extract the table with adjusted p values (FDR; false discovery rate). The output table is ordered by p values
+# Comparison of groups:  trt-ctr (meaning the positive logFC represents the gene is more highly expressed in the trt condition as compared to the ctr condition and vice versa)
+```{r}
+top_degs = topTags(object = et, n = "Inf")
+top_degs
+```
+
+# Get a summary DGE table (returns significant genes with absolute log fold change at least 1 and adjusted p value < 0.05)
+```{r}
+summary(decideTests(object = et, lfc = 1))
+```
+
+```{r}
+sig_genes <- top_degs[top_degs$table$FDR < 0.05 & abs(top_degs$table$logFC) > 1,]
+```
+
+```{r}
+sig_genes
+```
+
+```{r}
+write.csv(as.data.frame(sig_genes), file="/home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/RSEM_trinity_matrix_files/EdgeR_de_novo_SIG_dge.csv")
+```
+
+```{r}
+write.csv(as.data.frame(top_degs), file="/Volumes/olivernewman/2023/EdgeR_outputs/De_novo_mapping_sigDEGs/EdgeR_de_novo_dge.csv")
+```
+
+```{r}
+plotMD(object = et)
+```
+
+```{r}
+plot(et$table$logFC, -10*log10(et$table$PValue), main="Volcano plot", xlab="log(FC)", ylab="-log10(P-val)")
+```
+
+# Second volcano plot
+```{r}
+volcano_df <- transform(
+  et$table,
+  negLogP = -log10(PValue),
+  Significant = PValue < 0.05 & abs(logFC) > 1
+)
+
+p_volcano <- ggplot(volcano_df, aes(x = logFC, y = negLogP)) +
+  geom_point(aes(color = Significant), alpha = 0.6, size = 1.5) +
+  scale_color_manual(values = c("grey70", "firebrick")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
+  labs(
+    x = expression(log[2]~Fold~Change),
+    y = expression(-log[10]~P~value)
+  ) +
+  theme_minimal()
+
+p_volcano
+
+ggsave(
+  "/home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/RSEM_trinity_matrix_files/Volcano_RSEM_2023.svg",
+  p_volcano,
+  width = 6,
+  height = 5)
+```
+
+# Plot PCA
+```{r}
+# Convert edgeR object to DESeq2 object for PCA plot
+dds <- DESeqDataSetFromMatrix(countData = count_matrix, colData = data.frame(sample_info), design = ~sample_info)
+vsd <- vst(dds, blind=FALSE)
+
+# PCA plot
+p_pca <- plotPCA(vsd, intgroup = "sample_info") +
+  theme_minimal()
+
+p_pca
+
+ggsave(
+  "/home/newol210/macknight_oliver/NoneVsHigh_RNASeq_2023/Illumina_downloads_2023/RSEM_trinity_matrix_files/PCA_RSEM_2023.svg",
+  p_pca,
+  width = 6,
+  height = 5)
+
+# Explanation:
+# 1. **Loading Libraries**: Added `library(DESeq2)` and `library(ggplot2)` for PCA plotting.
+# 2. **Convert to DESeq2 Object**: Converted `count_matrix` to a `DESeq2` object.
+# 3. **Variance Stabilizing Transformation**: Applied `vst` (variance stabilizing transformation) to the `DESeq2` object.
+# 4. **PCA Plot**: Created the PCA plot using `plotPCA` and `ggplot2` functions.
+# This script should now generate a PCA plot as part of the RNA-Seq differential expression analysis.
+```
+
+# The following is for seeing what genes are causing separation on PC2 amoung sample-sets
+```{r}
+# Ensure DESeq2 and edgeR libraries are loaded
+
+# Assuming vsd is already created from DESeq2 object
+# Perform PCA
+pca <- prcomp(t(assay(vsd)))
+
+# Check the structure of the PCA result
+str(pca)
+
+# Extract the loadings for PC2
+loadings <- pca$rotation[, 2]
+
+# Ensure loadings are correctly extracted
+head(loadings)
+
+# Check the length of the loadings
+length(loadings)
+
+# Sort loadings by absolute value to find the most influential genes on PC2
+sorted_indices <- order(abs(loadings), decreasing = TRUE)
+
+# Check if the sorting was successful
+head(sorted_indices)
+
+# Get the names of the genes sorted by their influence on PC2
+top_gene_names <- rownames(pca$rotation)[sorted_indices]
+
+# Ensure the names are correctly extracted
+head(top_gene_names)
+
+# Get the corresponding loadings for these genes
+top_gene_loadings <- loadings[sorted_indices]
+
+# Ensure loadings match the gene names
+head(top_gene_loadings)
+
+# Create a data frame to view the top genes and their loadings
+top_gene_df <- data.frame(Gene = top_gene_names, Loading = top_gene_loadings)
+
+# View the top genes driving PC2
+head(top_gene_df)
+```
