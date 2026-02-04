@@ -1,24 +1,15 @@
 #!/usr/bin/env bash
-#
+
 #SBATCH --job-name=RepeatModeler
-#
 #SBATCH --account=newol210
-#
 #SBATCH --partition=aoraki
-#
 #SBATCH --ntasks-per-node=1
-#
 #SBATCH --cpus-per-task=64
-#
 #SBATCH --mem=60GB
-#
 #SBATCH --output=slurm_%j.log
-#
 #SBATCH --error=slurm_%j.err
-#
 #SBATCH --mail-user=newol210@student.otago.ac.nz
 #SBATCH --mail-type=END,FAIL
-#
 #SBATCH --time=72:00:00
 
 #!/bin/bash
