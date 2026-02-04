@@ -1,38 +1,17 @@
 #!/usr/bin/env bash
-#
-# Job name
+
 #SBATCH --job-name=vulcan_Rf_contig
-#
-# Account name
 #SBATCH --account=newol210
-#
-# Partition
 #SBATCH --partition=aoraki
-#
-# Ensure the allocation only goes on a single node
 #SBATCH --nodes=1
-#
-# Number of tasks per partition
 #SBATCH --ntasks-per-node=1
-#
-# Memory per GPU
 #SBATCH --mem=600GB
-#
-# Number of CPUs (e.g 16 cores)
 #SBATCH --cpus-per-task=32
-#
-# File to save stdout output
 #SBATCH --output=slurm_%j.log
-#
-# File to save stderr (Error logfile)
 #SBATCH --error=slurm_%j.err
-#
-# Time required to run job (hh:mm:ss)
 #SBATCH --time=1:00:00
 
-# Commands go below
-
-## Purge pre-existing modules
+# Purge pre-existing modules
 module purge
 
 #!/bin/bash
