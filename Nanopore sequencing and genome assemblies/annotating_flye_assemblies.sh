@@ -42,7 +42,7 @@ hisat2 -x ../flye_output_post_porechop/Rm_dorado_porechopped_assembly/RmFlyePore
 
 conda deactivate
 
-# Then pipe hisat2_output.bam.bai to StringTie to make a GTF specific to each genome
-# stringtie [-o <output.gtf>] [other_options] <read_alignments.bam> 
+# Then pipe hisat2_output.bam.bai to StringTie to make a GTF specific to each genome; so the StringTie command should be run 5 times
+stringtie [-o <output.gtf>] [other_options] <read_alignments.bam> 
 
 echo "Finished"
