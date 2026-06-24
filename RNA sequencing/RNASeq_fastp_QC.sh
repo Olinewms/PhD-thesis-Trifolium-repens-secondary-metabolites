@@ -62,4 +62,4 @@ done
 
 echo "All samples have been processed."
 
-conda deactivate
+mamba deactivate
