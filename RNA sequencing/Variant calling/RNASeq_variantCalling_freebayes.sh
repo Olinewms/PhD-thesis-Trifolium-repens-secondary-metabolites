@@ -16,32 +16,32 @@ set -ueo pipefail
 source ~/.bashrc
 mamba activate /home/newol210/macknight_oliver/mamba_envs/freebayes
 
-#cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1/all_bams/sorted_and_indexed_bams
+cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1/all_bams/sorted_and_indexed_bams
 
 # First you need to add a sample tag to each .bam file that you want to use, and then re-index them
-#samtools addreplacerg -r ID:H1 -r SM:H1 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H1.rg.bam H1_S56_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:H2 -r SM:H2 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H2.rg.bam H2_S57_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:H4 -r SM:H4 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H4.rg.bam H4_S66_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:H5 -r SM:H5 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H5.rg.bam H5_S67_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:H6 -r SM:H6 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H6.rg.bam H6_S68_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:L1 -r SM:L1 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L1.rg.bam L1_S54_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:L3 -r SM:L3 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L3.rg.bam L3_S55_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:L4 -r SM:L4 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L4.rg.bam L4_S63_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:L5 -r SM:L5 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L5.rg.bam L5_S64_Aligned.sortedByCoord.out_sorted.bam
-#samtools addreplacerg -r ID:L6 -r SM:L6 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L6.rg.bam L6_S65_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:H1 -r SM:H1 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H1.rg.bam H1_S56_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:H2 -r SM:H2 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H2.rg.bam H2_S57_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:H4 -r SM:H4 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H4.rg.bam H4_S66_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:H5 -r SM:H5 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H5.rg.bam H5_S67_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:H6 -r SM:H6 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/H6.rg.bam H6_S68_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:L1 -r SM:L1 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L1.rg.bam L1_S54_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:L3 -r SM:L3 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L3.rg.bam L3_S55_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:L4 -r SM:L4 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L4.rg.bam L4_S63_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:L5 -r SM:L5 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L5.rg.bam L5_S64_Aligned.sortedByCoord.out_sorted.bam
+samtools addreplacerg -r ID:L6 -r SM:L6 -o variants_LowVsHigh_genomeWide_freebayes_tetraploid/L6.rg.bam L6_S65_Aligned.sortedByCoord.out_sorted.bam
 
-#cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1/all_bams/sorted_and_indexed_bams/variants_LowVsHigh_genomeWide_freebayes_tetraploid/
+cd /home/newol210/macknight_oliver/NoneVsMidVsHigh_RNASeq/Processed_Fastq_by_fastp_attempt2/fastp_processedReads_mapped_to_UTM_hap1/all_bams/sorted_and_indexed_bams/variants_LowVsHigh_genomeWide_freebayes_tetraploid/
 
-#samtools index H1.rg.bam
-#samtools index H2.rg.bam
-#samtools index H4.rg.bam
-#samtools index H5.rg.bam
-#samtools index H6.rg.bam
-#samtools index L1.rg.bam
-#samtools index L3.rg.bam
-#samtools index L4.rg.bam
-#samtools index L5.rg.bam
-#samtools index L6.rg.bam
+samtools index H1.rg.bam
+samtools index H2.rg.bam
+samtools index H4.rg.bam
+samtools index H5.rg.bam
+samtools index H6.rg.bam
+samtools index L1.rg.bam
+samtools index L3.rg.bam
+samtools index L4.rg.bam
+samtools index L5.rg.bam
+samtools index L6.rg.bam
 
 # Running Freebayes
 freebayes -f /home/newol210/macknight_oliver/braker_working_dir/UTM_Trep_v1.0_hap1_genomic.fa \
